@@ -39,10 +39,6 @@ def collision(brick, board, x, y):
         return True
 
 
-..........
-..........
-..........
-
 # settings
 group_id = 23
 
@@ -63,10 +59,14 @@ while not game_is_over:
     microbit.display.show(nb_dropped_pieces)
 
     # create a new piece in the top left corner
-    ..........
+    brick = random.choice(bricks)
+    microbit.display.set_pixel(0, 0, brick[0][0])
+    microbit.display.set_pixel(0, 1, brick[0][1])
+    microbit.display.set_pixel(1, 0, brick[1][0])
+    microbit.display.set_pixel(1, 1, brick[1][1])
 
     # check if the new piece collides with dropped pieces
-    game_is_over = ..........
+    game_is_over = ...
 
     if not game_is_over:
         # ask orders until the current piece is dropped
