@@ -23,8 +23,8 @@ def get_message():
     return message
 
 
-def collision(brick, board, x, y):
-    """Check if the brick is on collision with an other or border
+def is_collision(brick, board, x, y):
+    """Check if the brick is on collision with another or the border
     parameters
     ------------
     brick: brick we want to check (str)
@@ -35,8 +35,10 @@ def collision(brick, board, x, y):
     ------------
     True or False
     """
-    if (brick[0][0] > 0 and board[x][y]):
+    if (brick[0][0] > 0 and board[x][y] != 0) or (brick[0][1] > 0 and board[x][y] != 0) or (brick[1][0] > 0 and board[x][y] != 0) or (brick[1][1] > 0 and board[x][y] != 0):
         return True
+    else:
+        return False
 
 
 # settings
