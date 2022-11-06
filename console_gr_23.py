@@ -28,14 +28,16 @@ def get_message():
 ..........
 
 # settings
-group_id = ..........
+group_id = 23
 
 # setup radio to receive orders
 radio.on()
 radio.config(group=group_id)
 
 # create empty board + available pieces
-..........
+board = [[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0]]
+bricks = [[9, 9], [9, 0]], [[9, 9], [0, 9]], [[9, 9], [9, 9]], [[9, 9], [0, 0]]
+
 
 # loop until game is over
 nb_dropped_pieces = 0

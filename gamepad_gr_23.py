@@ -25,7 +25,7 @@ def get_message():
 ..........
 
 # settings
-group_id = ..........
+group_id = 23
 
 # setup radio to receive/send messages
 radio.on()
