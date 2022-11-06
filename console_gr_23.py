@@ -23,6 +23,22 @@ def get_message():
     return message
 
 
+def collision(brick, board, x, y):
+    """Check if the brick is on collision with an other or border
+    parameters
+    ------------
+    brick: brick we want to check (str)
+    board: board of the game (str)
+    x: coordinate x (int)
+    y: coordinate y (int)
+    returns
+    ------------
+    True or False
+    """
+    if (brick[0][0] > 0 and board[x][y]):
+        return True
+
+
 ..........
 ..........
 ..........
@@ -35,9 +51,8 @@ radio.on()
 radio.config(group=group_id)
 
 # create empty board + available pieces
-board = [[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0],[0, 0, 0, 0, 0]]
-bricks = [[9, 9], [9, 0]], [[9, 9], [0, 9]], [[9, 9], [9, 9]], [[9, 9], [0, 0]]
-
+board = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
+bricks = [[9, 9], [9, 0]], [[9, 9], [0, 9]], [[9, 9], [9, 9]], [[9, 9], [0, 0]], [[9, 0], [0, 0]]
 
 # loop until game is over
 nb_dropped_pieces = 0
@@ -58,13 +73,13 @@ while not game_is_over:
         piece_dropped = False
         while not piece_dropped:
             # send state of the board to gamepad (as a string)
-            radio.send(..........)
+            radio.send(...)
 
             # wait until gamepad sends an order
             order = get_message()
 
             # execute order (drop or move piece)
-            ..........
+            ...
 
         # wait a few milliseconds and clear screen
         microbit.sleep(500)
