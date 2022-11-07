@@ -20,9 +20,20 @@ def get_message():
     return message
 
 
-...
-...
-...
+def accelerometer():
+        # send current direction
+        x = microbit.accelerometer.get_x()
+        y = microbit.accelerometer.get_y()
+        if abs(x) > abs(y):
+            if x > 0:
+                radio.send('right')
+            else:
+                radio.send('left')
+        elif abs(x) < abs(y):
+            if y > 0:
+                radio.send('down')
+            else:
+                radio.send('up')
 
 # settings
 group_id = 23
@@ -40,19 +51,16 @@ while True:
     microbit.display.clear()
 
     # show view of the board
-    ...
+    board = get_message()
+    print(board)
 
     # wait for button A or B to be pressed
     while not (microbit.button_a.is_pressed() or microbit.button_b.is_pressed()):
         microbit.sleep(50)
-
-    if microbit.button_a.is_pressed():
-        # send current direction
-        ...
-        ...
-        ...
-
-        radio.send(...)
-    elif microbit.button_b.is_pressed():
-        # notify that the piece should be dropped
-        radio.send(...)
+    while True:
+        if microbit.button_a.is_pressed():
+            accelerometer()
+    while True:
+        if microbit.button_b.is_pressed():
+            # notify that the piece should be dropped
+            radio.send('drop')

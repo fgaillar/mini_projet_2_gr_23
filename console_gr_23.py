@@ -38,6 +38,9 @@ def is_collision():
                     collision = True
     return collision
 
+def moove(direction):
+
+
 
 # settings
 group_id = 23
@@ -75,28 +78,8 @@ while not game_is_over:
             order = get_message()
 
             # execute order (drop or move piece)
-            if order == 'up':
-                if not is_collision():
-                    for x in range(len(brick)):
-                        for y in range(len(brick)):
-                            board[x][y] += brick[x-1][y]
-            elif order == 'down':
-                if not is_collision():
-                    for x in range(len(brick)):
-                        for y in range(len(brick)):
-                            board[x][y] += brick[x+1][y]
-            elif order == 'left':
-                if not is_collision():
-                    for x in range(len(brick)):
-                        for y in range(len(brick)):
-                            board[x][y] += brick[x][y-1]
-            elif order == 'right':
-                if not is_collision():
-                    for x in range(len(brick)):
-                        for y in range(len(brick)):
-                            board[x][y] += brick[x][y+1]
-            if order == 'drop':
-                piece_dropped = True
+            moove(order)
+
         # wait a few milliseconds and clear screen
         microbit.sleep(500)
         microbit.display.clear()
