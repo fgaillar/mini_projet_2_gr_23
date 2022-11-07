@@ -23,22 +23,20 @@ def get_message():
     return message
 
 
-def is_collision(brick, board, x, y):
+def is_collision():
     """Check if the brick is on collision with another or the border
-    parameters
-    ------------
-    brick: brick we want to check (str)
-    board: board of the game (str)
-    x: coordinate x (int)
-    y: coordinate y (int)
+
     returns
     ------------
     True or False
     """
-    if (brick[0][0] > 0 and board[x][y] != 0) or (brick[0][1] > 0 and board[x][y] != 0) or (brick[1][0] > 0 and board[x][y] != 0) or (brick[1][1] > 0 and board[x][y] != 0):
-        return True
-    else:
-        return False
+    collision = False
+    for x in range(2):
+        for y in range(2):
+            if not collision:
+                if brick[x][y] > 0 and board[x][y] > 0:
+                    collision = True
+    return collision
 
 
 # settings
@@ -62,27 +60,43 @@ while not game_is_over:
 
     # create a new piece in the top left corner
     brick = random.choice(bricks)
-    microbit.display.set_pixel(0, 0, brick[0][0])
-    microbit.display.set_pixel(0, 1, brick[0][1])
-    microbit.display.set_pixel(1, 0, brick[1][0])
-    microbit.display.set_pixel(1, 1, brick[1][1])
 
     # check if the new piece collides with dropped pieces
-    game_is_over = ...
+    is_collision()
 
     if not game_is_over:
         # ask orders until the current piece is dropped
         piece_dropped = False
         while not piece_dropped:
             # send state of the board to gamepad (as a string)
-            radio.send(...)
+            radio.send(board)
 
             # wait until gamepad sends an order
             order = get_message()
 
             # execute order (drop or move piece)
-            ...
-
+            if order == 'up':
+                if not is_collision():
+                    for x in range(len(brick)):
+                        for y in range(len(brick)):
+                            board[x][y] += brick[x-1][y]
+            elif order == 'down':
+                if not is_collision():
+                    for x in range(len(brick)):
+                        for y in range(len(brick)):
+                            board[x][y] += brick[x+1][y]
+            elif order == 'left':
+                if not is_collision():
+                    for x in range(len(brick)):
+                        for y in range(len(brick)):
+                            board[x][y] += brick[x][y-1]
+            elif order == 'right':
+                if not is_collision():
+                    for x in range(len(brick)):
+                        for y in range(len(brick)):
+                            board[x][y] += brick[x][y+1]
+            if order == 'drop':
+                piece_dropped = True
         # wait a few milliseconds and clear screen
         microbit.sleep(500)
         microbit.display.clear()
