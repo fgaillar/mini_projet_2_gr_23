@@ -1,4 +1,3 @@
-import math
 import random
 
 import radio
@@ -31,16 +30,15 @@ def is_collision():
     True or False
     """
     collision = False
-    for x in range(2):
-        for y in range(2):
+    for x in range(len(brick)):
+        for y in range(len(brick)):
             if not collision:
                 if brick[x][y] > 0 and board[x][y] > 0:
                     collision = True
     return collision
 
 def moove(direction):
-
-
+    ...
 
 # settings
 group_id = 23
@@ -51,7 +49,7 @@ radio.config(group=group_id)
 
 # create empty board + available pieces
 board = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
-bricks = [[9, 9], [9, 0]], [[9, 9], [0, 9]], [[9, 9], [9, 9]], [[9, 9], [0, 0]], [[9, 0], [0, 0]]
+bricks = [[9, 9], [9, 0]], [[9, 9], [0, 9]], [[9, 9], [9, 9]], [[9, 9], [0, 0]], [[9, 0], [0, 0]], [[9, 0], [9, 0]], []
 
 # loop until game is over
 nb_dropped_pieces = 0
@@ -63,6 +61,9 @@ while not game_is_over:
 
     # create a new piece in the top left corner
     brick = random.choice(bricks)
+    for x in range(len(brick)):
+        for y in range(len(brick)):
+            microbit.display.set_pixel(x, y, 9)
 
     # check if the new piece collides with dropped pieces
     is_collision()
@@ -72,7 +73,9 @@ while not game_is_over:
         piece_dropped = False
         while not piece_dropped:
             # send state of the board to gamepad (as a string)
-            radio.send(board)
+            board_str = ''
+            board_str = board_str.join(board)
+            radio.send()
 
             # wait until gamepad sends an order
             order = get_message()

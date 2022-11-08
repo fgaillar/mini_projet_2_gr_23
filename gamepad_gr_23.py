@@ -51,8 +51,7 @@ while True:
     microbit.display.clear()
 
     # show view of the board
-    board = get_message()
-    print(board)
+    print(view)
 
     # wait for button A or B to be pressed
     while not (microbit.button_a.is_pressed() or microbit.button_b.is_pressed()):
