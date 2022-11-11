@@ -35,41 +35,30 @@ def is_collision():
                     return True
     return False
 
+def execute_order(order, brick, position_brick, board):
 
-def move(direction, coord_x, coord_y):
-    """move the brick through the board
-    parameter:
-    ---------------
-    direction: direction th brick will move (str)
-    coord_x: coordinates x of the brick (int)
-    coord_y: coordinates y of the brick (int)
+    x = position_brick[0]
+    y = position_brick[1]
 
-    return:
-    ---------------
+    if order == "drop":
+        for row in range(2):
+            for column in range(2):
+                board[row+x][column+y] = brick[row][column]
+        return board
 
-    """
-    if direction == 'up':
-        coord_x -= 1
-        if board[coord_x][coord_y]:
-            if board[coord_x][coord_y] == 0:
-                board[coord_x][coord_y] = brick[coord_x][coord_y]
-    if direction == 'down':
-        coord_x += 1
-        if board[coord_x][coord_y]:
-            if board[coord_x][coord_y] == 0:
-                board[coord_x][coord_y] = brick[coord_x][coord_y]
-    if direction == 'left':
-        coord_y -= 1
-        if board[coord_x][coord_y]:
-            if board[coord_x][coord_y] == 0:
-                board[coord_x][coord_y] = brick[coord_x][coord_y]
-    if direction == 'right':
-        coord_y += 1
-        if board[coord_x][coord_y]:
-            if board[coord_x][coord_y] == 0:
-                board[coord_x][coord_y] = brick[coord_x][coord_y]
-    return coord_x, coord_y
+    elif order == 'left':
+        position_brick = [x, y - 1]
+    elif order == 'right':
+        position_brick = [x, y + 1]
+    elif order == 'down':
+        position_brick = [x + 1, y ]
+    elif order == 'up':
+        position_brick = [x + 1, y ]
 
+    return position_brick
+
+#if not is_collision(order, brick,execute_order(order, brick,position_brick) :
+#    execute_order(order, brick, position_brick)
 
 # settings
 group_id = 23
@@ -79,11 +68,7 @@ radio.on()
 radio.config(group=group_id)
 
 # create empty board + available pieces
-board = [[0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0],
-         [0, 0, 0, 0, 0]]
+board = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
 
 bricks = [[9,9],[9,0]],[[9,9],[0,9]],[[9,9],[9,9]],[[9,9],[0,0]],[[9,0],[0,0]],[[9,0],[9,0]],[[9,0],[9,9]]
 
@@ -126,12 +111,11 @@ while not game_is_over:
             order = get_message()
 
             # execute order (drop or move piece)
-            move(order, coord_x, coord_y)
-            if order == 'drop':
+            if order == "drop":
+                board = execute_order('drop', brick, position_brick, board)
                 piece_dropped = True
-                nb_dropped_pieces += 1
             else:
-                coord_x, coord_y = move(order, coord_x, coord_y)
+                position_brick = execute_order(order, brick, position_brick, board)
 
         # wait a few milliseconds and clear screen
         microbit.sleep(500)
