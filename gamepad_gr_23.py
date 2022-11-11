@@ -19,21 +19,23 @@ def get_message():
 
     return message
 
+def decode(board):
+    """Read the board_str and transform in list
 
-def accelerometer():
-        # send current direction
-        x = microbit.accelerometer.get_x()
-        y = microbit.accelerometer.get_y()
-        if abs(x) > abs(y):
-            if x > 0:
-                radio.send('right')
-            else:
-                radio.send('left')
-        elif abs(x) < abs(y):
-            if y > 0:
-                radio.send('down')
-            else:
-                radio.send('up')
+    parameter:
+    ------------
+    board : the board that is received by the radio
+
+    return:
+    ------------
+    return board_list (list)
+    """
+    board_list = [[], [], [], [], []]
+    board_str = board.split("-")
+    for element, n in zip(board_str, range(100)):
+        for e in element:
+            board_list[n].append(int(e))
+    return board_list
 
 # settings
 group_id = 23
@@ -51,15 +53,29 @@ while True:
     microbit.display.clear()
 
     # show view of the board
-    print(view)
+    board_list = decode(view)
+    for x in range(len(board_list)):
+        for y in range(len(board_list)):
+            if board_list[x][y] == 9:
+                microbit.display.set_pixel(x, y, 9)
 
     # wait for button A or B to be pressed
     while not (microbit.button_a.is_pressed() or microbit.button_b.is_pressed()):
         microbit.sleep(50)
-    while True:
-        if microbit.button_a.is_pressed():
-            accelerometer()
-    while True:
-        if microbit.button_b.is_pressed():
+    if microbit.button_a.is_pressed():
+        # send current direction
+        x = microbit.accelerometer.get_x()
+        y = microbit.accelerometer.get_y()
+        if abs(x) > abs(y):
+            if x > 0:
+                radio.send('right')
+            else:
+                radio.send('left')
+        elif abs(x) < abs(y):
+            if y > 0:
+                radio.send('down')
+            else:
+                radio.send('up')
+    elif microbit.button_b.is_pressed():
             # notify that the piece should be dropped
             radio.send('drop')
