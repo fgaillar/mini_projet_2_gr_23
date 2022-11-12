@@ -128,7 +128,6 @@ while not game_is_over:
                 piece_dropped = True
             else:
                 position_brick = execute_order(order, board, brick_x, brick_y)
-
         # wait a few milliseconds and clear screen
         microbit.sleep(500)
         microbit.display.clear()
