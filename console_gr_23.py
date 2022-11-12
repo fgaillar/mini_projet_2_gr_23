@@ -35,30 +35,31 @@ def is_collision():
                     return True
     return False
 
-def execute_order(order, brick, position_brick, board):
 
-    x = position_brick[0]
-    y = position_brick[1]
+def execute_order(order, board, brick_x, brick_y):
+    piece_dropped = False
+    if order == 'drop':
+        for row in range(len(brick)):
+            for column in range(len(brick[row])):
+                if brick[row][column] == 9:
+                    board[row + brick_x][column + brick_y] = 9
+    else:
+        brick_x, brick_y = move(order, brick_x, brick_y)
 
-    if order == "drop":
-        for row in range(2):
-            for column in range(2):
-                board[row+x][column+y] = brick[row][column]
-        return board
+    return board, brick_x, brick_y, piece_dropped
 
-    elif order == 'left':
-        position_brick = [x, y - 1]
+
+def move(order, brick_x, brick_y):
+    if order == 'left':
+        brick_y -= 1
     elif order == 'right':
-        position_brick = [x, y + 1]
+        brick_y += 1
     elif order == 'down':
-        position_brick = [x + 1, y ]
+        brick_x += 1
     elif order == 'up':
-        position_brick = [x + 1, y ]
+        brick_x -= 1
+    return brick_x, brick_y
 
-    return position_brick
-
-#if not is_collision(order, brick,execute_order(order, brick,position_brick) :
-#    execute_order(order, brick, position_brick)
 
 # settings
 group_id = 23
@@ -70,7 +71,8 @@ radio.config(group=group_id)
 # create empty board + available pieces
 board = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
 
-bricks = [[9,9],[9,0]],[[9,9],[0,9]],[[9,9],[9,9]],[[9,9],[0,0]],[[9,0],[0,0]],[[9,0],[9,0]],[[9,0],[9,9]]
+bricks = [[9, 9], [9, 0]], [[9, 9], [0, 9]], [[9, 9], [9, 9]], [[9, 9], [0, 0]], [[9, 0], [0, 0]], [[9, 0], [9, 0]], [
+    [9, 0], [9, 9]]
 
 # loop until game is over
 nb_dropped_pieces = 0
@@ -90,6 +92,16 @@ while not game_is_over:
         game_is_over = True
     coord_x = 0
     coord_y = 0
+
+    # check if the new piece collide with board
+    for x in range(len(brick)):
+        for y in range(len(brick)):
+            if board[x][y] != 0 and brick != 0:
+                game_is_over = True
+    if not game_is_over:
+        for x in range(len(brick)):
+            for y in range(len(brick)):
+                board[x][y] = brick[x][y]
 
     if not game_is_over:
         # ask orders until the current piece is dropped
@@ -112,10 +124,10 @@ while not game_is_over:
 
             # execute order (drop or move piece)
             if order == "drop":
-                board = execute_order('drop', brick, position_brick, board)
+                board = execute_order(order, board, brick_x, brick_y)
                 piece_dropped = True
             else:
-                position_brick = execute_order(order, brick, position_brick, board)
+                position_brick = execute_order(order, board, brick_x, brick_y)
 
         # wait a few milliseconds and clear screen
         microbit.sleep(500)
