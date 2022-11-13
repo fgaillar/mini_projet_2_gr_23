@@ -35,31 +35,47 @@ def is_collision():
                     return True
     return False
 
+def remove_brick(brick_x, brick_y):
+    """remove the ancient location of the brick
+
+    parameters:
+    ---------------
+    brick_x: coordinates x of the top left of the brick (int)
+    brick_y: coordinates y of the top left of the brick (int)
+    """
+    board[brick_x][brick_y] = previous_board[brick_x][brick_y]
+    board[brick_x][brick_y + 1] = previous_board[brick_x][brick_y + 1]
+    board[brick_x + 1][brick_y] = previous_board[brick_x + 1][brick_y]
+    board[brick_x + 1][brick_y + 1] = previous_board[brick_x + 1][brick_y + 1]
 
 def execute_order(order, board, brick_x, brick_y):
-    piece_dropped = False
     if order == 'drop':
         for row in range(len(brick)):
             for column in range(len(brick[row])):
                 if brick[row][column] == 9:
                     board[row + brick_x][column + brick_y] = 9
-    else:
-        brick_x, brick_y = move(order, brick_x, brick_y)
-
-    return board, brick_x, brick_y, piece_dropped
-
-
-def move(order, brick_x, brick_y):
-    if order == 'left':
+    elif order == 'left':
         brick_y -= 1
+        for x in range(len(brick)):
+            for y in range(len(brick)):
+                board[brick_x + x][brick_y + y] = brick[x][y]
     elif order == 'right':
         brick_y += 1
+        for x in range(len(brick)):
+            for y in range(len(brick)):
+                board[brick_x + x][brick_y + y] = brick[x][y]
     elif order == 'down':
         brick_x += 1
+        for x in range(len(brick)):
+            for y in range(len(brick)):
+                board[brick_x + x][brick_y + y] = brick[x][y]
     elif order == 'up':
         brick_x -= 1
-    return brick_x, brick_y
-
+        for x in range(len(brick)):
+            for y in range(len(brick)):
+                board[brick_x + x][brick_y + y] = brick[x][y]
+    remove_brick(brick_x, brick_y)
+    return board
 
 # settings
 group_id = 23
@@ -73,6 +89,8 @@ board = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0,
 
 bricks = [[9, 9], [9, 0]], [[9, 9], [0, 9]], [[9, 9], [9, 9]], [[9, 9], [0, 0]], [[9, 0], [0, 0]], [[9, 0], [9, 0]], [
     [9, 0], [9, 9]]
+
+previous_board = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [0, 0, 0, 0, 0]]
 
 # loop until game is over
 nb_dropped_pieces = 0
@@ -124,10 +142,11 @@ while not game_is_over:
 
             # execute order (drop or move piece)
             if order == "drop":
-                board = execute_order(order, board, brick_x, brick_y)
+                execute_order(order, board, brick_x, brick_y)
                 piece_dropped = True
+                previous_board = board
             else:
-                position_brick = execute_order(order, board, brick_x, brick_y)
+                position_brick = position_brick[brick_x][brick_y]
         # wait a few milliseconds and clear screen
         microbit.sleep(500)
         microbit.display.clear()

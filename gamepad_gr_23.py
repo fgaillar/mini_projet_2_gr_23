@@ -31,10 +31,10 @@ def decode(board):
     return board_list (list)
     """
     board_list = [[], [], [], [], []]
-    board_str = board.split("-")
-    for element, n in zip(board_str, range(100)):
-        for e in element:
-            board_list[n].append(int(e))
+    board = board.replace('-', '')
+    for element, n in zip(board, range(100)):
+        board_list[n // 5].append(int(element))
+
     return board_list
 
 # settings
@@ -57,7 +57,7 @@ while True:
     for x in range(len(board_list)):
         for y in range(len(board_list)):
             if board_list[x][y] == 9:
-                microbit.display.set_pixel(x, y, 9)
+                microbit.display.set_pixel(y, x, 9)
 
     # wait for button A or B to be pressed
     while not (microbit.button_a.is_pressed() or microbit.button_b.is_pressed()):
